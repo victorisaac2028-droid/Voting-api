@@ -53,7 +53,15 @@ const userSchema = new Schema(
     resetOTPExpires: {
       type: Date,
       default: null
-    }
+    },
+    resetOTPAttempts: {
+    type: Number,
+    default: 0
+},
+failedLoginAttempts: {
+    type: Number,
+    default: 0
+}
   }
 );
 

@@ -1,5 +1,5 @@
 const express = require("express");
-const { protect } = require("../middleware/auth.middleware");
+const { protect, adminOnly } = require("../middleware/auth.middleware");
 const { register,
      getAccounts,
       removeAccount,
@@ -17,11 +17,11 @@ authRouter.post("/register", register);
 authRouter.post("/login", login);
 authRouter.post("/logOut", logOut);
 authRouter.post("/refreshToken", refreshToken);
-authRouter.post("/forgotPassword", forgotPassword);
-authRouter.patch("/updatePassword", updatePassword);
-authRouter.get("/accounts", getAccounts);
+authRouter.post("/forgotPassword",  forgotPassword);
+authRouter.patch("/updatePassword", protect, updatePassword);
+authRouter.get("/accounts", protect, adminOnly, getAccounts);
 authRouter.get("/check", protect, check);
-authRouter.delete("/account/:email", removeAccount);
+authRouter.delete("/account/:email", protect, adminOnly, removeAccount);
 authRouter.post("/verifyOtp", verifyOTP);
 authRouter.post("/resetPassword", resetPassword);
 
