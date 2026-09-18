@@ -1,5 +1,10 @@
-exports.buildRes = (info) => {
-    const {password, id, ...rest } = info;
-    rest.userId = id;
-    return rest;
-}
+const buildRes = (res, statusCode, message, data = null) => {
+    return res.status(statusCode).json({
+        msg: message,
+        data
+    });
+};
+
+module.exports = {
+    buildRes
+};

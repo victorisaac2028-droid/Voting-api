@@ -1,23 +1,22 @@
 const express = require("express");
-const appRouter = require("./router/index/index");
+const appRouter = require("./router/index");
 const { CONFIG} = require("./config/env");
 const app = express();
 const cors = require("cors");
-const { WHITE_LIST } = require("./env");
-
+const { WHITE_LIST } = require("./config/env");
+const dbconnection = require("./config/database");
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: function(origin, cb){
-    if(!origin || WHITE_LIST.includes(origin)){
-      return cb(null, true)
-    }else {
-      return cb(new Error("Not Allowed by CORS"))
-    }
-  },
-  methods: ["POST", "PUT", "DELETE", "PATCH"],
-  Credential: true,
-}))
+  origin: [
+    "http://localhost:5500",
+    // "http://127.0.0.1:5500"
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
+}));
 
 const PORT = CONFIG.PORT || 3000;
 
@@ -27,6 +26,7 @@ app.get("/api/status", (req, res) => {
   res.send("welcome to voting api");
 });
 
-app.listen(PORT, () => {
-  console.log(`server is running on http://localhost:${PORT}`);
+app.listen(PORT, async() => {
+  await dbconnection.connectMONGODB();
+  console.log(`server is running on ${PORT}`);
 });
